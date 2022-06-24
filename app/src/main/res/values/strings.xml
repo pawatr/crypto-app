@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Crypto App</string>
+    <string name="search">Search coin here</string>
+    <string name="label_search">Search</string>
 </resources>

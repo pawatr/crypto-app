@@ -37,4 +37,29 @@
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:hint="@string/label_search"
+        app:placeholderText="@string/search"
+        app:layout_constraintTop_toBottomOf="@+id/mainAppBar">
+
+        <EditText
+            android:id="@+id/searchEdt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_search"
+            android:maxLines="1"
+            android:lines="1"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:importantForAutofill="no"
+            tools:ignore="LabelFor" />
+    </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
