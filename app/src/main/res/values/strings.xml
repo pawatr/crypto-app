@@ -2,4 +2,7 @@
     <string name="app_name">Crypto App</string>
     <string name="search">Search coin here</string>
     <string name="label_search">Search</string>
+    <string name="invite_friend">Invite your friend to earn more coin!</string>
+    <string name="crypto_ads">Crypto Ads</string>
+    <string name="format_price" formatted="false">%.2f</string>
 </resources>
