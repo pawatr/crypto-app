@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:apps="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.feed.FeedActivity"
+    tools:showIn="@layout/activity_feed">
+
+    <ImageView
+        android:id="@+id/ivActionbarLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/small_padding_margin"
+        android:contentDescription="@string/app_name"
+        apps:layout_constraintStart_toStartOf="parent"
+        apps:layout_constraintTop_toTopOf="parent"
+        apps:srcCompat="@drawable/ic_dm_logo_bar" />
+
+    <TextView
+        android:id="@+id/tvFeedCalendar"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/small_padding_margin"
+        android:drawablePadding="@dimen/xsmall_padding_margin"
+        android:paddingBottom="@dimen/xsmall_padding_margin"
+        android:paddingEnd="@dimen/small_padding_margin"
+        android:paddingStart="@dimen/xsmall_padding_margin"
+        android:paddingTop="@dimen/xsmall_padding_margin"
+        android:text="@string/tvActionbarToday"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:focusable="false"
+        apps:layout_constraintStart_toEndOf="@+id/ivActionbarLogo"
+        apps:drawableEndCompat="@drawable/ic_calendar" />
+
+    <TextView
+        android:id="@+id/emailVerify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_red"
+        android:drawableStart="@drawable/ic_warning_red"
+        android:drawablePadding="@dimen/xsmall_padding_margin"
+        android:paddingTop="@dimen/xsmall_padding_margin"
+        android:paddingStart="@dimen/small_padding_margin"
+        android:paddingEnd="@dimen/small_padding_margin"
+        android:paddingBottom="@dimen/xsmall_padding_margin"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        android:textSize="10sp"
+        android:text="@string/please_verify_email"
+        android:layout_marginEnd="@dimen/xsmall_padding_margin"
+        apps:layout_constraintTop_toTopOf="parent"
+        apps:layout_constraintBottom_toBottomOf="parent"
+        apps:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
