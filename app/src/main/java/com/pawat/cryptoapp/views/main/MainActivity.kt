@@ -9,7 +9,7 @@ import com.pawat.cryptoapp.common.Constants
 import com.pawat.cryptoapp.data.model.Coin
 import com.pawat.cryptoapp.data.remote.dto.CoinSearch
 import com.pawat.cryptoapp.databinding.ActivityMainBinding
-import com.pawat.cryptoapp.extensions.hideKeyboard
+import com.pawat.cryptoapp.views.detail.CoinDetailViewModel
 import com.pawat.cryptoapp.views.main.adapter.CoinListAdapter
 import com.pawat.cryptoapp.views.main.adapter.listener.CoinListListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -17,8 +17,10 @@ import kotlin.math.pow
 
 class MainActivity: AppCompatActivity(), CoinListListener {
 
-    private val coinListViewModel: CoinListViewModel by viewModel()
     private val searchViewModel: SearchViewModel by viewModel()
+    private val coinListViewModel: CoinListViewModel by viewModel()
+    private val coinDetailViewModel: CoinDetailViewModel by viewModel()
+
 
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
@@ -53,7 +55,7 @@ class MainActivity: AppCompatActivity(), CoinListListener {
     }
 
     override fun onCoinClickListener(coin: Coin) {
-        //TODO coin detail
+        coinDetailViewModel.getCoinDetail(coin.id)
     }
 
     override fun onInviteClickListener() {
@@ -100,6 +102,18 @@ class MainActivity: AppCompatActivity(), CoinListListener {
             Log.d(TAG, it)
         }
         searchViewModel.loading.observe(this){
+            // loading
+            Log.d(TAG, it.toString())
+        }
+
+        coinDetailViewModel.coinDetail.observe(this){
+            Log.d("CoinDetail", "${it.name}")
+        }
+        coinDetailViewModel.error.observe(this){
+            // error search coin list
+            Log.d(TAG, it)
+        }
+        coinDetailViewModel.loading.observe(this){
             // loading
             Log.d(TAG, it.toString())
         }

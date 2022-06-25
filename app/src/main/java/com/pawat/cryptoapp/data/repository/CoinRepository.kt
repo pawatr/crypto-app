@@ -4,6 +4,7 @@ import com.pawat.cryptoapp.data.remote.Result
 import com.pawat.cryptoapp.data.remote.responseParser
 import com.pawat.cryptoapp.common.Constants
 import com.pawat.cryptoapp.data.remote.ApiEndpoints
+import com.pawat.cryptoapp.data.remote.dto.CoinDetailDto
 import com.pawat.cryptoapp.data.remote.dto.CoinDto
 import com.pawat.cryptoapp.data.remote.dto.SearchCoinDto
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +23,13 @@ class CoinRepository(private val apiEndpoints: ApiEndpoints) {
     suspend fun getCoinList(size: Int, page: Int): Result<List<CoinDto>, Exception> {
         val response = withContext(Dispatchers.IO) {
             apiEndpoints.getCoinList(Constants.QUERY_CURRENCY , size, page).execute()
+        }
+        return responseParser(response)
+    }
+
+    suspend fun getCoinDetail(coinId: String): Result<CoinDetailDto, Exception> {
+        val response = withContext(Dispatchers.IO) {
+            apiEndpoints.getDetail(coinId).execute()
         }
         return responseParser(response)
     }
