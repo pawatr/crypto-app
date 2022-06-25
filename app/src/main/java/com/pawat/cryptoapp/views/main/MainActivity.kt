@@ -1,27 +1,26 @@
-package com.pawat.cryptoapp.views.coinlist
+package com.pawat.cryptoapp.views.main
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.inputmethod.EditorInfo
-import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.pawat.cryptoapp.R
 import com.pawat.cryptoapp.common.Constants
 import com.pawat.cryptoapp.data.model.Coin
 import com.pawat.cryptoapp.data.remote.dto.CoinSearch
-import com.pawat.cryptoapp.views.coinlist.adapter.CoinListAdapter
-import com.pawat.cryptoapp.views.coinlist.adapter.listener.CoinListAdapterListener
-import kotlinx.android.synthetic.main.activity_coin_list.*
+import com.pawat.cryptoapp.databinding.ActivityMainBinding
+import com.pawat.cryptoapp.extensions.hideKeyboard
+import com.pawat.cryptoapp.views.main.adapter.CoinListAdapter
+import com.pawat.cryptoapp.views.main.adapter.listener.CoinListListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.math.pow
 
-
-class CoinListActivity: AppCompatActivity(), CoinListAdapterListener {
+class MainActivity: AppCompatActivity(), CoinListListener {
 
     private val coinListViewModel: CoinListViewModel by viewModel()
     private val searchViewModel: SearchViewModel by viewModel()
+
+    private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
     private val coinListAdapter: CoinListAdapter by lazy { CoinListAdapter() }
 
@@ -36,20 +35,25 @@ class CoinListActivity: AppCompatActivity(), CoinListAdapterListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_coin_list)
+        setContentView(binding.root)
         setupView()
         observerData()
         coinListViewModel.getCoinList(GET_COIN_SIZE_PER_PAGE, page)
     }
 
-    //region {@Observer CoinList}
-    override fun onScrollToBottomListener() {
-        page += 1
+    //region {@Observer CoinListListener}
+    override fun onEditorActionListener(search: String) {
+        searchViewModel.searchCoin(search)
+    }
+
+    override fun onTextChangedToEmpty() {
+        page = 1
+        coinList.clear()
         coinListViewModel.getCoinList(GET_COIN_SIZE_PER_PAGE, page)
     }
 
     override fun onCoinClickListener(coin: Coin) {
-        //TODO call detail
+        //TODO coin detail
     }
 
     override fun onInviteClickListener() {
@@ -59,33 +63,18 @@ class CoinListActivity: AppCompatActivity(), CoinListAdapterListener {
         intent.putExtra(Intent.EXTRA_TEXT, Constants.INVITE_HOST_NAME)
         startActivity(Intent.createChooser(intent, "Share URL"))
     }
+
+    override fun onScrollToBottomListener() {
+        page += 1
+        coinListViewModel.getCoinList(GET_COIN_SIZE_PER_PAGE, page)
+    }
     //endregion
 
     private fun setupView() {
         coinListAdapter.setListener(this)
-        coinRecycler?.apply {
-            layoutManager = LinearLayoutManager(this@CoinListActivity)
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = coinListAdapter
-        }
-        searchEdt?.setOnEditorActionListener(OnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val search = searchEdt.text.toString()
-                if (search.trim().isNotEmpty()) {
-                    searchViewModel.searchCoin(searchEdt.text.toString())
-                }
-                searchEdt.clearFocus()
-                return@OnEditorActionListener true
-            }
-            false
-        })
-        searchEdt?.doOnTextChanged { text, _, _, _ ->
-            if (text.isNullOrEmpty()){
-                page = 1
-                coinList.clear()
-                coinListViewModel.getCoinList(GET_COIN_SIZE_PER_PAGE, page)
-                searchEdt.setText("")
-                searchEdt.clearFocus()
-            }
         }
     }
 
@@ -117,18 +106,23 @@ class CoinListActivity: AppCompatActivity(), CoinListAdapterListener {
     }
 
     private fun updateViewCoinList() {
-        val items: java.util.ArrayList<Any> = arrayListOf()
-        var inviteIndex = 3
-        var i = 1
-        while (i <= coinList.size) {
-            if (i == inviteIndex) {
-                items.add(getString(R.string.invite_friend))
-                inviteIndex *= 2
-            } else {
-                items.add(coinList[i - 1])
+        val items: ArrayList<Any> = arrayListOf()
+        var n = 0
+        var inviteIndex = getIndex(n)
+        for (i in 0 until coinList.size){
+            if (i == inviteIndex){
+                n += 1
+                items.add(Constants.INVITE_FRIEND_VIEW)
+                inviteIndex = getIndex(n) + i
             }
-            ++i
+            items.add(coinList[i])
         }
+        items.add(0, Constants.HEADER_VIEW)
+        items.add(0, Constants.SEARCH_VIEW)
         coinListAdapter.items = items
+    }
+
+    private fun getIndex(n: Int): Int{
+        return 3 * (2.0.pow(n.toDouble()).toInt())
     }
 }

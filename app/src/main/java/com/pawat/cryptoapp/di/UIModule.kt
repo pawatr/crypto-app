@@ -1,7 +1,7 @@
 package com.pawat.cryptoapp.di
 
-import com.pawat.cryptoapp.views.coinlist.CoinListViewModel
-import com.pawat.cryptoapp.views.coinlist.SearchViewModel
+import com.pawat.cryptoapp.views.main.CoinListViewModel
+import com.pawat.cryptoapp.views.main.SearchViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

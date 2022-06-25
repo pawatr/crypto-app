@@ -7,8 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import com.pawat.cryptoapp.R
-import com.pawat.cryptoapp.extensions.startActivity
-import com.pawat.cryptoapp.views.coinlist.CoinListActivity
+import com.pawat.cryptoapp.views.main.MainActivity
 
 
 @SuppressLint("CustomSplashScreen")
@@ -20,7 +19,7 @@ class SplashScreenActivity : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed(
             {
-                startActivity(Intent(this, CoinListActivity::class.java))
+                startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
         , 1000)

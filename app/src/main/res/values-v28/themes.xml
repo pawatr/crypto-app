@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextSubtitle1" parent="Theme.CryptoApp">
+        <item name="android:textSize">16sp</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="TextSubtitle2" parent="Theme.CryptoApp">
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="TextCaption" parent="Theme.CryptoApp">
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Headline6" parent="Theme.CryptoApp">
+        <item name="android:textSize">20sp</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+</resources>
