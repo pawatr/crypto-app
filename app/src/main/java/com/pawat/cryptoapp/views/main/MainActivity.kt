@@ -16,12 +16,14 @@ import com.pawat.cryptoapp.data.remote.dto.CoinSearch
 import com.pawat.cryptoapp.databinding.ActivityMainBinding
 import com.pawat.cryptoapp.views.detail.CoinDetailViewModel
 import com.pawat.cryptoapp.views.main.adapter.CoinListAdapter
+import com.pawat.cryptoapp.views.main.adapter.TopRankAdapter
 import com.pawat.cryptoapp.views.main.adapter.listener.CoinListListener
+import com.pawat.cryptoapp.views.main.adapter.listener.TopRankListener
 import com.pawat.cryptoapp.views.main.fragment.CoinDetailBottomSheet
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.pow
 
-class MainActivity: AppCompatActivity(), CoinListListener {
+class MainActivity: AppCompatActivity(), CoinListListener, TopRankListener {
 
     private val searchViewModel: SearchViewModel by viewModel()
     private val coinListViewModel: CoinListViewModel by viewModel()
@@ -29,7 +31,8 @@ class MainActivity: AppCompatActivity(), CoinListListener {
 
 
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val coinListAdapter: CoinListAdapter by lazy { CoinListAdapter() }
+    private val topRankAdapter: TopRankAdapter by lazy { TopRankAdapter() }
+    private val coinListAdapter: CoinListAdapter by lazy { CoinListAdapter(topRankAdapter) }
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
     private var coinList: ArrayList<Coin> = arrayListOf()
@@ -50,7 +53,13 @@ class MainActivity: AppCompatActivity(), CoinListListener {
         coinListViewModel.getCoinList(GET_COIN_SIZE_PER_PAGE, page)
     }
 
-    //region {@Observer CoinListListener}
+    //region {TopRankCoinListListener}
+    override fun onTopRankCoinClickListener(coin: Coin) {
+        coinDetailViewModel.getCoinDetail(coin.id)
+    }
+    //endregion
+
+    //region {CoinListListener}
     override fun onEditorActionListener(search: String) {
         searchViewModel.searchCoin(search)
     }
@@ -80,6 +89,7 @@ class MainActivity: AppCompatActivity(), CoinListListener {
     //endregion
 
     private fun setupView() {
+        topRankAdapter.setListener(this)
         coinListAdapter.setListener(this)
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
@@ -144,17 +154,23 @@ class MainActivity: AppCompatActivity(), CoinListListener {
 
     private fun updateViewCoinList() {
         val items: ArrayList<Any> = arrayListOf()
+        val topCoin: List<Coin> = coinList.subList(0, 3)
+        val coinItems: List<Coin> = coinList.subList(3, coinList.size - 1)
         var n = 0
         var inviteIndex = getIndex(n)
-        for (i in 0 until coinList.size){
+        for (i in coinItems.indices){
             if (i == inviteIndex){
                 n += 1
                 items.add(Constants.INVITE_FRIEND_VIEW)
                 inviteIndex = getIndex(n) + i
             }
-            items.add(coinList[i])
+            items.add(coinItems[i])
         }
+        val topRankItems: ArrayList<Any> = arrayListOf()
+        topRankItems.addAll(topCoin)
+        topRankItems.add(Constants.OPEN_WEB_VIEW)
         items.add(0, Constants.HEADER_VIEW)
+        items.add(0, topRankItems)
         items.add(0, Constants.SEARCH_VIEW)
         coinListAdapter.items = items
     }

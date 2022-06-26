@@ -9,4 +9,7 @@
     <string name="title_price">Price (THB)</string>
     <string name="title_market_cap">Market Cap (THB)</string>
     <string name="go_to_trade">GO TO TRADE</string>
+    <string name="register_title">Register Now</string>
+    <string name="register_caption">Receive bonus register</string>
+    <string name="top_rank">Top Ranking</string>
 </resources>

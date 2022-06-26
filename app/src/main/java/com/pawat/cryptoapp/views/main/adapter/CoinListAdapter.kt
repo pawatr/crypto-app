@@ -4,28 +4,29 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.widget.doOnTextChanged
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.pawat.cryptoapp.R
 import com.pawat.cryptoapp.common.Constants
 import com.pawat.cryptoapp.data.model.Coin
-import com.pawat.cryptoapp.databinding.ListItemCoinBinding
-import com.pawat.cryptoapp.databinding.ListItemHeaderBinding
-import com.pawat.cryptoapp.databinding.ListItemInviteFriendBinding
-import com.pawat.cryptoapp.databinding.ListItemSearchViewBinding
+import com.pawat.cryptoapp.databinding.*
 import com.pawat.cryptoapp.extensions.hideKeyboard
 import com.pawat.cryptoapp.views.main.adapter.listener.CoinListListener
 import java.text.NumberFormat
 
-class CoinListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+@Suppress("UNCHECKED_CAST")
+class CoinListAdapter(private val topRankAdapter: TopRankAdapter): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object{
         const val VIEW_TYPE_SEARCH = 0
         const val VIEW_TYPE_HEADER = 1
         const val VIEW_TYPE_COIN = 2
         const val VIEW_TYPE_INVITE = 3
+        const val VIEW_TYPE_TOP_RANK = 4
     }
 
     var items: List<Any> = emptyList()
@@ -52,6 +53,10 @@ class CoinListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     ListItemHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 )
             }
+            VIEW_TYPE_TOP_RANK -> {
+                TopRankLayoutViewHolder(
+                    ListItemHorizontalWrapperBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            }
             VIEW_TYPE_COIN -> {
                 CoinsViewHolder(parent.context,
                     ListItemCoinBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -70,6 +75,9 @@ class CoinListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
             VIEW_TYPE_HEADER -> {
                 (holder as HeaderViewHolder).bindView()
+            }
+            VIEW_TYPE_TOP_RANK -> {
+                (holder as TopRankLayoutViewHolder).bindView(items[position] as ArrayList<Coin>)
             }
             VIEW_TYPE_COIN -> {
                 (holder as CoinsViewHolder).bindView(items[position] as Coin)
@@ -91,11 +99,12 @@ class CoinListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val item = items[position]
         return when (item.javaClass) {
             Coin::class.java -> VIEW_TYPE_COIN
-            else -> { // String
+            else -> {
                 when (item) {
                     Constants.INVITE_FRIEND_VIEW -> VIEW_TYPE_INVITE
                     Constants.SEARCH_VIEW -> VIEW_TYPE_SEARCH
-                    else -> VIEW_TYPE_HEADER
+                    Constants.HEADER_VIEW -> VIEW_TYPE_HEADER
+                    else -> VIEW_TYPE_TOP_RANK
                 }
             }
         }
@@ -129,6 +138,14 @@ class CoinListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         : RecyclerView.ViewHolder(binding.root){
         fun bindView() {
             binding.header.text = context.getString(R.string.title_rank)
+        }
+    }
+
+    inner class TopRankLayoutViewHolder(private val binding: ListItemHorizontalWrapperBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bindView(topRankItems: ArrayList<Coin>) {
+            binding.recyclerView.layoutManager = LinearLayoutManager(binding.root.context, LinearLayout.HORIZONTAL, false)
+            binding.recyclerView.adapter = topRankAdapter
+            topRankAdapter.topRankItems = topRankItems
         }
     }
 
