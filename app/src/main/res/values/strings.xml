@@ -6,4 +6,7 @@
     <string name="crypto_ads">Crypto Ads</string>
     <string name="format_price" formatted="false">%.2f</string>
     <string name="title_rank">Ranking</string>
+    <string name="title_price">Price (THB)</string>
+    <string name="title_market_cap">Market Cap (THB)</string>
+    <string name="go_to_trade">GO TO TRADE</string>
 </resources>

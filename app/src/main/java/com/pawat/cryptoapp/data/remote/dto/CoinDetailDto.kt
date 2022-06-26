@@ -28,11 +28,17 @@ data class MarketData(
     @SerializedName("current_price")
     val currentPrice: CurrentPrice,
     @SerializedName("price_change_percentage_24h")
-    val priceChange: Double
+    val priceChange: Double,
+    @SerializedName("market_cap")
+    val marketCap: MarketCap
 )
 
 data class CurrentPrice(
-    val thb: String
+    val thb: Double
+)
+
+data class MarketCap(
+    val thb: Double
 )
 
 data class Ticker(
@@ -48,6 +54,7 @@ fun CoinDetailDto.toCoinDetail(): CoinDetail {
         name = name,
         symbol = symbol,
         currentPrice = marketData.currentPrice.thb,
+        marketCap = marketData.marketCap.thb,
         priceChange = marketData.priceChange,
         tradeUrl = tickers[0].tradeUrl
     )

@@ -6,7 +6,8 @@ data class CoinDetail(
     val image: String,
     val name: String,
     val symbol: String,
-    val currentPrice: String,
+    val currentPrice: Double,
+    val marketCap: Double,
     val priceChange: Double,
     val tradeUrl: String
 )
