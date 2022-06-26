@@ -4,17 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pawat.cryptoapp.data.model.Coin
 import com.pawat.cryptoapp.data.remote.Err
 import com.pawat.cryptoapp.data.remote.Loading
 import com.pawat.cryptoapp.data.remote.Ok
-import com.pawat.cryptoapp.data.remote.dto.CoinSearch
+import com.pawat.cryptoapp.data.remote.dto.toCoin
 import com.pawat.cryptoapp.data.repository.CoinRepository
 import kotlinx.coroutines.launch
 
 class SearchViewModel(private val repository: CoinRepository): ViewModel() {
 
-    private val _coins = MutableLiveData<List<CoinSearch>>()
-    val coins: LiveData<List<CoinSearch>> get() = _coins
+    private val _coins = MutableLiveData<List<Coin>>()
+    val coins: LiveData<List<Coin>> get() = _coins
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
@@ -26,7 +27,7 @@ class SearchViewModel(private val repository: CoinRepository): ViewModel() {
         viewModelScope.launch {
             when (val result = repository.searchCoin(search)) {
                 is Ok -> {
-                    val coinList = result.value.coins
+                    val coinList = result.value.coins.map { it.toCoin() }
                     _loading.postValue(false)
                     _coins.postValue(coinList)
                 }

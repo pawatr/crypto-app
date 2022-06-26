@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.pawat.cryptoapp.common.Constants
 import com.pawat.cryptoapp.data.model.Coin
-import com.pawat.cryptoapp.data.remote.dto.CoinSearch
 import com.pawat.cryptoapp.databinding.ActivityMainBinding
 import com.pawat.cryptoapp.views.detail.CoinDetailViewModel
 import com.pawat.cryptoapp.views.main.adapter.CoinListAdapter
@@ -37,7 +36,6 @@ class MainActivity: AppCompatActivity(), CoinListListener, TopRankListener {
 
     private var coinList: ArrayList<Coin> = arrayListOf()
     private var page = 1
-    private var coinSearchList: ArrayList<CoinSearch> = arrayListOf()
 
     companion object{
         const val TAG = "CoinListActivity"
@@ -123,20 +121,20 @@ class MainActivity: AppCompatActivity(), CoinListListener, TopRankListener {
             Log.d(TAG, it)
         }
         coinListViewModel.loading.observe(this){
-            // loading
-            Log.d(TAG, it.toString())
+            binding.loading.visibility = if (it) View.VISIBLE else View.GONE
         }
 
         searchViewModel.coins.observe(this){
-            coinSearchList.addAll(it)
+            coinList.clear()
+            coinList.addAll(it)
+            updateViewCoinSearch()
         }
         searchViewModel.error.observe(this){
             // error search coin list
             Log.d(TAG, it)
         }
         searchViewModel.loading.observe(this){
-            // loading
-            Log.d(TAG, it.toString())
+            binding.loading.visibility = if (it) View.VISIBLE else View.GONE
         }
 
         coinDetailViewModel.coinDetail.observe(this){
@@ -147,8 +145,7 @@ class MainActivity: AppCompatActivity(), CoinListListener, TopRankListener {
             Log.d(TAG, it)
         }
         coinDetailViewModel.loading.observe(this){
-            // loading
-            Log.d(TAG, it.toString())
+            binding.loading.visibility = if (it) View.VISIBLE else View.GONE
         }
     }
 
@@ -171,6 +168,23 @@ class MainActivity: AppCompatActivity(), CoinListListener, TopRankListener {
         topRankItems.add(Constants.OPEN_WEB_VIEW)
         items.add(0, Constants.HEADER_VIEW)
         items.add(0, topRankItems)
+        items.add(0, Constants.SEARCH_VIEW)
+        coinListAdapter.items = items
+    }
+
+    private fun updateViewCoinSearch() {
+        val items: ArrayList<Any> = arrayListOf()
+        var n = 0
+        var inviteIndex = getIndex(n)
+        for (i in coinList.indices){
+            if (i == inviteIndex){
+                n += 1
+                items.add(Constants.INVITE_FRIEND_VIEW)
+                inviteIndex = getIndex(n) + i
+            }
+            items.add(coinList[i])
+        }
+        items.add(0, Constants.HEADER_VIEW)
         items.add(0, Constants.SEARCH_VIEW)
         coinListAdapter.items = items
     }
